@@ -1,0 +1,14 @@
+{
+  "name": "rabbit-box",
+  "version": "2.0.0",
+  "description": "",
+  "main": "dist/test.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc"
+  },
+  "keywords": ["rabbit","box","rabbit-box","data-manager","data-handler"],
+  "author": "",
+  "license": "ISC",
+  "type": "module"
+}
