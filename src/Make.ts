@@ -1,6 +1,5 @@
 import reason from "./Errors.js";
-import { isNumber, isObject } from "./external.js";
-import types from "./Types.js";
+import {findType} from "./Types.js";
 export default class Make{
 	holder: object;
 	keys: object;
@@ -42,32 +41,16 @@ export default class Make{
 			//required
 			e['require'] && e['value']===undefined ? missing.push(`${i}:${keys[i]}`) : 0
 			//types
-			// console.log(e)
 			this.#isRightType(e);
 		});
 		const isSatisfy:boolean = !!missing.length;
 		if(isSatisfy) throw Error(`${reason["!Requirements"]}\n==>\t${missing}`)
 		return true;
 	}
-	#isRightType(obj){
-		const {types,value} = obj;
+	#isRightType(obj:{types:string[]&string,value:any}){
+		const {types,value} = obj
 		if(types==='any') return;
-		const advancedTypes = {
-			'object':()=>isObject(value),
-			'number':()=>isNumber(value),
-			'int':()=>typeof value==='number',
-			'char':()=>typeof value==='string' ? value.length===1 : false,
-		}
-		const typeFound:boolean = !Object.keys(advancedTypes).every(key=>{
-			if(advancedTypes[key]()){
-				if(types.includes(key)) return false;
-				else throw Error(`${reason['!Type']}\n==>\t${types}`);
-			} return true;
-		})
-		if(typeFound) return true;
-		if(['bigint','boolean','function','string','symbol','undefined'].includes(typeof value) && types.includes(typeof value)) return true;
-		throw Error(`${reason['!Type']}\n==>\t${types}`);
-
+		if(!types.includes(findType(value))) throw Error(`${reason['!Type']}\n==>\t${types}`);
 	}
 	isDNR(args){
 		let position = args.indexOf('#DNR')
