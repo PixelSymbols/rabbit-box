@@ -6,6 +6,7 @@ export default class Set {
         splitSign: ':',
         typesSign: '<>',
         orSign: '|',
+        requireSign: '!'
     };
     default;
     constructor(defaultConfig) {
@@ -50,7 +51,7 @@ export default class Set {
     }
     #isRequired(p, obj, checked) {
         if (!obj['require']) {
-            if (p[0] === '!') {
+            if (p[0] === this.config['requireSign']) {
                 obj['require'] = true;
                 p = p.slice(1);
             }

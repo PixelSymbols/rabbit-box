@@ -1,5 +1,5 @@
 import reason from "./Errors.js";
-import {findType} from "./Types.js";
+import {findType,isTypeExpected} from "./Types.js";
 export default class Make{
 	holder: object;
 	keys: object;
@@ -50,7 +50,11 @@ export default class Make{
 	#isRightType(obj:{types:string[]&string,value:any}){
 		const {types,value} = obj
 		if(types==='any') return;
-		if(!types.includes(findType(value))) throw Error(`${reason['!Type']}\n==>\t${types}`);
+		const type:any = findType(value);
+/* 		console.log({value,expected:types})
+		console.log({gotten:type})
+		console.log({isTypeExpected:isTypeExpected(type,types)}); */
+		if(!isTypeExpected(type,types)) throw Error(`${reason['!Type']}\n==>\t${types}`);
 	}
 	isDNR(args){
 		let position = args.indexOf('#DNR')

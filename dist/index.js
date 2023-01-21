@@ -46,7 +46,10 @@ export default class RabbitBox {
         const holderKeys = Object.keys(this.holder);
         args.forEach((element, globalPosition) => {
             if (isObject(element)) {
-                const newValues = this.makeChecker.isSettings(element);
+                let newValues = false;
+                const isElementEmpty = !Object.keys(element).length;
+                if (!isElementEmpty)
+                    newValues = this.makeChecker.isSettings(element);
                 if (newValues !== false) {
                     Object.keys(newValues).forEach((key) => {
                         this.holder[key]['value'] = newValues[key];

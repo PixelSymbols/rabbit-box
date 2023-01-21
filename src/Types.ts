@@ -1,26 +1,42 @@
 import {isObject,isNumber} from './external.js'
 
-const all = {
-	"undefined":x=>typeof x==='undefined',
-	"boolean":x=>typeof x==='boolean',
-	"int":x=>typeof x==='number',
-	"bigint":x=>typeof x==='bigint',
-	"number":x=>isNumber(x),
-	"char":x=>typeof x==='string' ? x.length===1 : false,
-	"function":x=>typeof x==='function',
-	"symbol":x=>typeof x==="symbol",
-	"string":x=>typeof x==='string',
-	"array":x=>Array.isArray(x),
-	"object":x=>isObject(x),
-}
-const allTypes = Object.keys(all);
+const allTypes = [
+	"undefined",
+	"boolean",
+	"int",
+	"bigint",
+	"number",
+	"char",
+	"function",
+	"symbol",
+	"string",
+	"array",
+	"object",
+]
 function findType(value:any){
-	let type = 'any'
-	allTypes.every(key=>{
-		if(!all[key](value)) return true;
-		type = key;
-		return false;
-	});
-	return type;
+	const normalType = typeof value as string;
+	const types = {normal:undefined,other:[]}
+	if(!['string','number','object'].includes(normalType)) return normalType;
+	switch(normalType){
+		case 'string':
+			if(value.length<=1){
+				types['normal'] = 'char';
+				types['other'].push('string');
+			} else
+				types['normal'] = 'string';
+			isNumber(value) ? types['other'].push('number') : 0;
+			break;
+		case 'number':
+			types['normal'] = 'int';
+			types['other'].push('number')
+			break;
+		case 'object':
+			types['normal'] = isObject(value) ? 'object' : 'array';
+	}
+	return types;
 }
-export {allTypes,findType};
+function isTypeExpected(type,types){
+	const allTypes = Object.values(type).flat();
+	return !allTypes.every(e=>types.includes(e) ? false : true);
+}
+export {allTypes,findType,isTypeExpected};
