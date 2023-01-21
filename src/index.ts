@@ -43,6 +43,7 @@ export default class RabbitBox{
 		else temp['position']!==-1 ? args.splice(temp['position'],1) : 0;
 		const holderKeys = Object.keys(this.holder);
 		args.forEach((element,globalPosition)=>{
+			element = this.makeChecker.shortcuts(element);
 			if(isObject(element)){
 				let newValues:false|object = false;
 				const isElementEmpty:boolean = !Object.keys(element).length;

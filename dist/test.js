@@ -1,5 +1,5 @@
 import RabbitBox from "./index.js";
 //not bug, but a feature
-const x = new RabbitBox("!pizza|p:<array>", "lemonade|lemon|l", { "burger|sandwich": "TASTY" }, "frutiloops|f", { "apple|a": 6 });
-console.log(x.make([]));
+const x = new RabbitBox("pizza|p:<object,number>", "lemon");
+console.log(x.make({ ':': 5 }));
 //# sourceMappingURL=test.js.map

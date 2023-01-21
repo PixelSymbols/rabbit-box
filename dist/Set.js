@@ -1,19 +1,14 @@
 import reason from "./Errors.js";
-import { allTypes } from './Types.js';
+import Config from "./Config.js";
+import symbol from "./SymbolFunctions.js";
 export default class Set {
-    config = {
-        allowedTypes: allTypes,
-        splitSign: ':',
-        typesSign: '<>',
-        orSign: '|',
-        requireSign: '!'
-    };
+    config = Config;
     default;
     constructor(defaultConfig) {
         this.default = defaultConfig;
     }
     parse(element) {
-        const params = element.split(this.config['splitSign']);
+        const params = symbol.devide(element);
         const obj = structuredClone(this.default);
         //we check value in main script
         delete obj["value"];
@@ -39,7 +34,7 @@ export default class Set {
         //globalkey is invalid
         if (!p.length)
             return false;
-        const temp = p.split(this.config['orSign']);
+        const temp = symbol.or(p);
         //first would be global key, other will be variations
         obj["globalKey"] = temp.shift();
         checked["globalKey"] = true;
@@ -51,7 +46,7 @@ export default class Set {
     }
     #isRequired(p, obj, checked) {
         if (!obj['require']) {
-            if (p[0] === this.config['requireSign']) {
+            if (this.config['symbol']['require'].includes(p[0])) {
                 obj['require'] = true;
                 p = p.slice(1);
             }
@@ -62,9 +57,9 @@ export default class Set {
         if (checked["types"])
             return false;
         //its not a type thing
-        if (!(p[0] === this.config["typesSign"][0] && p.at(-1) === this.config["typesSign"][1]))
+        if (!(p[0] === this.config['symbol']['types'][0] && p.at(-1) === this.config['symbol']['types'][1]))
             return false;
-        const types = p.slice(1, -1).split(this.config['orSign']);
+        const types = symbol.or(p.slice(1, -1));
         //check types if they are valid
         if (!types.every(type => this.config['allowedTypes'].includes(type)))
             throw Error(reason["!Type"]);

@@ -1,17 +1,6 @@
 import { isObject, isNumber } from './external.js';
-const allTypes = [
-    "undefined",
-    "boolean",
-    "int",
-    "bigint",
-    "number",
-    "char",
-    "function",
-    "symbol",
-    "string",
-    "array",
-    "object",
-];
+import Config from './Config.js';
+const allTypes = Config['allowedTypes'];
 function findType(value) {
     const normalType = typeof value;
     const types = { normal: undefined, other: [] };
